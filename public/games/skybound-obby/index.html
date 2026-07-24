@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skybound Obby</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style3d.css" />
+  <link rel="stylesheet" href="account.css" />
+</head>
+<body>
+  <canvas id="game" aria-label="Permainan Skybound Obby"></canvas>
+
+  <section id="startScreen" class="screen show">
+    <div class="hero-copy">
+      <p class="eyebrow">☁️ SKYBOUND OBBY</p>
+      <h1>Seberapa tinggi<br><span>kamu bisa naik?</span></h1>
+      <p class="subtitle">Lompati laser, taklukkan lantai rapuh, dan capai portal di atas awan.</p>
+    </div>
+    <div class="picker-card">
+      <div class="picker-head"><span>PILIH KARAKTER</span><strong id="charCount">01 / 04</strong></div>
+      <div class="character-stage">
+        <button id="prevChar" class="arrow" aria-label="Karakter sebelumnya">‹</button>
+        <canvas id="preview" width="230" height="280"></canvas>
+        <button id="nextChar" class="arrow" aria-label="Karakter berikutnya">›</button>
+      </div>
+      <h2 id="charName">Maya</h2>
+      <p id="charStyle">Penjelajah Pelangi</p>
+      <div class="level-title">PILIH LEVEL</div>
+      <div class="level-picker">
+        <button class="level-btn active" data-level="easy"><b>EASY</b><small>Santai</small></button>
+        <button class="level-btn" data-level="medium"><b>MEDIUM</b><small>Seimbang</small></button>
+        <button class="level-btn" data-level="hard"><b>HARD</b><small>Ekstrem</small></button>
+      </div>
+      <button id="startBtn" class="primary">MULAI MENDAKI <span>→</span></button>
+      <div class="mini-controls"><span><kbd>WASD</kbd> Bergerak</span><span><kbd>SPACE</kbd> Lompat</span><span><kbd>← ↑ ↓ →</kbd> Kamera</span></div>
+    </div>
+  </section>
+
+  <div id="hud" class="hud hidden">
+    <div class="brand">☁️ <span>SKYBOUND</span></div>
+    <div class="progress-wrap"><div class="progress-label"><span>KETINGGIAN</span><b id="heightText">0 M</b></div><div class="progress"><i id="progressBar"></i></div></div>
+    <div class="checkpoint-pill">◆ CHECKPOINT <b id="checkpointText">1 / 5</b></div>
+    <button id="soundBtn" class="icon-btn" aria-label="Suara">♪</button>
+    <button id="pauseBtn" class="icon-btn" aria-label="Jeda">Ⅱ</button>
+  </div>
+  <div id="toast" class="toast">CHECKPOINT TERCAPAI!</div>
+  <div id="tip" class="tip hidden"><b>HATI-HATI!</b><span>Lantai retak akan menghilang setelah diinjak.</span></div>
+
+  <section id="endScreen" class="screen center hidden">
+    <div class="result-card">
+      <div class="trophy">🏆</div><p class="eyebrow">PUNCAK TERCAPAI</p>
+      <h1>Hebat, <span id="winnerName">Maya</span>!</h1>
+      <p>Kamu berhasil menaklukkan Skybound Obby.</p>
+      <div class="stats"><div><small>WAKTU</small><b id="timeStat">00:00</b></div><div><small>JATUH</small><b id="fallStat">0×</b></div></div>
+      <button id="replayBtn" class="primary">MAIN LAGI <span>↻</span></button>
+    </div>
+  </section>
+
+  <div id="crosshair" class="crosshair hidden">+</div>
+  <div id="accountBadge" class="game-account">Mode tamu</div>
+  <div id="mouseHint" class="mouse-hint hidden">Gunakan tombol panah untuk memutar kamera • Mouse juga bisa dipakai</div>
+  <script src="three.min.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

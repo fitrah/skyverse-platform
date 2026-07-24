@@ -1,0 +1,13 @@
+node_modules/
+node_modules.incomplete/
+package-lock.supabase.bak
+.next/
+out/
+.env*
+!.env.example
+npm-debug.log*
+*.tsbuildinfo
+
+.env.local
+dev-server.log
+dev-server-error.log
