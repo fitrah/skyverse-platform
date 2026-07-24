@@ -1,0 +1,3 @@
+.screen:not(.hidden) ~ .touch-controls {
+  display: none !important;
+}
