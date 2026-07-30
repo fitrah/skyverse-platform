@@ -25,6 +25,7 @@ export default function GeneratedGame({
   const joystickRef = useRef<HTMLDivElement>(null);
   const knobRef = useRef<HTMLDivElement>(null);
   const touchInput = useRef({ x: 0, y: 0, action: false });
+  const actionQueued = useRef(false);
   const [started, setStarted] = useState(false);
   const [result, setResult] = useState<"won" | "lost" | null>(null);
   const [score, setScore] = useState(0);
@@ -127,10 +128,11 @@ export default function GeneratedGame({
         player.vy += 720 * dt;
         player.y += player.vy * dt;
         if (
-          (keys.has("Space") || keys.has("ArrowUp") || touchInput.current.action) &&
+          (keys.has("Space") || keys.has("ArrowUp") || actionQueued.current) &&
           player.y >= h - 80
         ) {
           player.vy = -440;
+          actionQueued.current = false;
           touchInput.current.action = false;
         }
         if (player.y > h - 62) {
@@ -259,6 +261,7 @@ export default function GeneratedGame({
 
   const start = () => {
     touchInput.current = { x: 0, y: 0, action: false };
+    actionQueued.current = false;
     setScore(0);
     setLives(config.lives);
     setResult(null);
@@ -334,9 +337,18 @@ export default function GeneratedGame({
             onPointerDown={(event) => {
               event.currentTarget.setPointerCapture(event.pointerId);
               touchInput.current.action = true;
+              actionQueued.current = true;
             }}
-            onPointerUp={() => (touchInput.current.action = false)}
-            onPointerCancel={() => (touchInput.current.action = false)}
+            onPointerUp={() => {
+              touchInput.current.action = false;
+              window.setTimeout(() => {
+                actionQueued.current = false;
+              }, 200);
+            }}
+            onPointerCancel={() => {
+              touchInput.current.action = false;
+              actionQueued.current = false;
+            }}
           >
             <b>
               {config.template === "platformer"
