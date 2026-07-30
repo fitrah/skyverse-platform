@@ -220,15 +220,17 @@
     position: relative;
     width: 100%;
     height: auto;
-    max-height: 245px;
+    max-height: none;
     padding: 18px;
   }
   .builderSidebar > div {
-    max-height: 165px;
+    max-height: min(260px, 45vh);
     margin-top: 20px;
     overflow-x: hidden;
     overflow-y: auto;
     padding-right: 4px;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
   }
   .builderSidebar button {
     flex: 0 0 auto;
