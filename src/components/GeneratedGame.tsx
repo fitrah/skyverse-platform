@@ -12,7 +12,15 @@ type Entity = {
   kind?: string;
 };
 
-export default function GeneratedGame({ config }: { config: GameConfig }) {
+export default function GeneratedGame({
+  config,
+  slug,
+  trackProgress,
+}: {
+  config: GameConfig;
+  slug: string;
+  trackProgress: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const joystickRef = useRef<HTMLDivElement>(null);
   const knobRef = useRef<HTMLDivElement>(null);
@@ -27,6 +35,7 @@ export default function GeneratedGame({ config }: { config: GameConfig }) {
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext("2d")!;
     const keys = new Set<string>();
+    const startedAt = performance.now();
     let raf = 0,
       last = performance.now(),
       spawn = 0,
@@ -59,6 +68,17 @@ export default function GeneratedGame({ config }: { config: GameConfig }) {
     addEventListener("keyup", up);
     const finish = (won: boolean) => {
       over = true;
+      if (trackProgress) {
+        void fetch(`/api/games/generated/${encodeURIComponent(slug)}/progress`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            score: collected,
+            won,
+            timeMs: Math.max(1, Math.round(performance.now() - startedAt)),
+          }),
+        }).catch(() => {});
+      }
       setScore(collected);
       setResult(won ? "won" : "lost");
       setStarted(false);
@@ -235,7 +255,7 @@ export default function GeneratedGame({ config }: { config: GameConfig }) {
       removeEventListener("keydown", down);
       removeEventListener("keyup", up);
     };
-  }, [started, config]);
+  }, [started, config, slug, trackProgress]);
 
   const start = () => {
     touchInput.current = { x: 0, y: 0, action: false };
