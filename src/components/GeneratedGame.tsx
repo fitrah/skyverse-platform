@@ -335,9 +335,14 @@ export default function GeneratedGame({
           <button
             className="actionButton"
             onPointerDown={(event) => {
-              event.currentTarget.setPointerCapture(event.pointerId);
               touchInput.current.action = true;
               actionQueued.current = true;
+              try {
+                event.currentTarget.setPointerCapture(event.pointerId);
+              } catch {
+                // Some iOS Safari versions reject pointer capture on buttons.
+                // The action must still work without capture.
+              }
             }}
             onPointerUp={() => {
               touchInput.current.action = false;
@@ -348,6 +353,14 @@ export default function GeneratedGame({
             onPointerCancel={() => {
               touchInput.current.action = false;
               actionQueued.current = false;
+            }}
+            onClick={() => {
+              // Click is a fallback for browsers that do not reliably dispatch
+              // pointer events to touch controls.
+              actionQueued.current = true;
+              window.setTimeout(() => {
+                actionQueued.current = false;
+              }, 250);
             }}
           >
             <b>
