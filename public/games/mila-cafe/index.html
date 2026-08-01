@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <title>Mila Cafe — Skyverse</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="game">
+    <header><a href="/">SKY<span>VERSE</span></a><h1>MILA CAFE</h1><div class="stats"><b id="score">0</b> PESANAN <i id="hearts">♥♥♥</i></div></header>
+    <section class="cafe">
+      <div class="window"><span>☁</span><span>☀</span><span>☁</span></div>
+      <div class="sign">Mila Cafe <small>fresh & sweet</small></div>
+      <div class="customer-area">
+        <div class="customer" id="customer"><div class="customer-head"><i></i></div><div class="customer-body"></div></div>
+        <div class="speech"><small>PESANAN SAYA</small><div id="order">🍰 + 🧃</div><p id="customerText">Tolong siapkan pesananku!</p><div class="patience"><i id="patience"></i></div></div>
+      </div>
+      <div class="counter"><div class="bell">●</div><span>MILA CAFE</span></div>
+      <div class="mila" aria-label="Mila memakai baju merah, rok pink, celemek putih dan topi chef">
+        <div class="chef-hat"><i></i><i></i><i></i></div><div class="hair"></div><div class="face"><i></i><b></b></div>
+        <div class="shirt"><div class="apron">M</div></div><div class="skirt"></div><div class="legs"><i></i><i></i></div><div class="shoes"><i></i><i></i></div>
+      </div>
+      <div class="prep"><p>Pilih satu kue dan satu minuman, lalu sajikan.</p><div class="tray"><span id="cakeChoice">?</span><b>+</b><span id="drinkChoice">?</span></div><button id="serve" disabled>SAJIKAN PESANAN</button></div>
+    </section>
+    <section class="menu"><div><h2>🍰 PILIH KUE</h2><div id="cakes" class="choices"></div></div><div><h2>🥤 PILIH MINUMAN</h2><div id="drinks" class="choices"></div></div></section>
+  </main>
+  <section id="overlay" class="overlay"><div><small>SKYVERSE PRESENTS</small><h2>Mila Cafe</h2><div class="mini-mila">👩🏻‍🍳</div><p>Layani semua pelanggan dengan benar! Pilih kue dan minuman sesuai pesanan. Pesanan yang salah atau pelanggan yang terlalu lama menunggu akan mengurangi satu hati.</p><ul><li>❤️ Kamu punya 3 hati</li><li>⭐ Layani 10 pelanggan untuk menang</li><li>⏱️ Jangan biarkan mereka menunggu</li></ul><button id="start">BUKA CAFE →</button></div></section>
+  <div id="toast"></div>
+  <script src="game.js"></script>
+</body>
+</html>
