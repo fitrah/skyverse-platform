@@ -14,8 +14,9 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "Harus login agar skor tersimpan." }, { status: 401 });
   const body = await request.json();
   const score = Math.max(0, Math.min(10, Number(body.score) || 0));
+  const level = ["level-1", "level-2", "level-3"].includes(String(body.level)) ? String(body.level) : "level-1";
   const timeMs = Math.max(1, Number(body.timeMs) || 1);
   const won = body.won === true;
-  await query(`INSERT INTO player_progress (user_id,game_id,level,checkpoint,best_time_ms,wins) SELECT $1,id,'service',$2,$3,$4 FROM games WHERE slug='mila-cafe' ON CONFLICT (user_id,game_id,level) DO UPDATE SET checkpoint=GREATEST(player_progress.checkpoint,EXCLUDED.checkpoint),best_time_ms=CASE WHEN EXCLUDED.best_time_ms IS NULL THEN player_progress.best_time_ms WHEN player_progress.best_time_ms IS NULL THEN EXCLUDED.best_time_ms ELSE LEAST(player_progress.best_time_ms,EXCLUDED.best_time_ms) END,wins=player_progress.wins+EXCLUDED.wins,updated_at=now()`, [user.id, score, won ? timeMs : null, won ? 1 : 0]);
+  await query(`INSERT INTO player_progress (user_id,game_id,level,checkpoint,best_time_ms,wins) SELECT $1,id,$2,$3,$4,$5 FROM games WHERE slug='mila-cafe' ON CONFLICT (user_id,game_id,level) DO UPDATE SET checkpoint=GREATEST(player_progress.checkpoint,EXCLUDED.checkpoint),best_time_ms=CASE WHEN EXCLUDED.best_time_ms IS NULL THEN player_progress.best_time_ms WHEN player_progress.best_time_ms IS NULL THEN EXCLUDED.best_time_ms ELSE LEAST(player_progress.best_time_ms,EXCLUDED.best_time_ms) END,wins=player_progress.wins+EXCLUDED.wins,updated_at=now()`, [user.id, level, score, won ? timeMs : null, won ? 1 : 0]);
   return NextResponse.json({ ok: true });
 }
