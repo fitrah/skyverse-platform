@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <title>Memory Match Online — Skyverse</title>
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">SKY<span>VERSE</span></a>
+    <div class="title"><i>🃏</i><b>MEMORY MATCH</b><small>ONLINE</small></div>
+    <a class="home" href="/">← Kembali</a>
+  </header>
+
+  <main>
+    <section id="lobby" class="lobby">
+      <div class="heroCards" aria-hidden="true"><i>🐼</i><i>?</i><i>🌙</i><i>?</i><i>🚀</i></div>
+      <small>GAME MULTIPLAYER SKYVERSE</small>
+      <h1>Temukan pasangan.<br><span>Kalahkan temanmu!</span></h1>
+      <p>Buka dua kartu bergantian. Kalau sama, dapat 1 poin dan lanjut bermain. Kalau berbeda, giliran pindah ke pemain berikutnya.</p>
+      <div class="lobbyActions">
+        <button id="createRoom" class="primary">＋ BUAT ROOM BARU</button>
+        <div class="joinBox"><input id="roomCode" maxlength="6" placeholder="KODE ROOM" autocomplete="off" /><button id="joinRoom">GABUNG →</button></div>
+      </div>
+      <ul><li>👥 2–4 pemain</li><li>🃏 20 pasang kartu</li><li>🏆 Skor tertinggi menang</li></ul>
+      <p id="lobbyError" class="error"></p>
+    </section>
+
+    <section id="waiting" class="waiting hidden">
+      <small>ROOM SIAP</small><h2>Kode Room</h2>
+      <button id="copyCode" class="roomCode">------</button>
+      <p>Bagikan kode ini ke temanmu. Permainan dapat dimulai setelah minimal 2 pemain bergabung.</p>
+      <div id="waitingPlayers" class="waitingPlayers"></div>
+      <button id="startGame" class="primary" disabled>MULAI PERMAINAN</button>
+      <p id="waitingMessage" class="hint">Menunggu pemain lain...</p>
+    </section>
+
+    <section id="arena" class="arena hidden">
+      <div class="arenaHead">
+        <div><small>ROOM <b id="arenaCode">------</b></small><h2 id="turnText">Menunggu giliran...</h2></div>
+        <div id="scoreboard" class="scoreboard"></div>
+      </div>
+      <div id="board" class="board" aria-label="Papan kartu"></div>
+      <p id="gameHint" class="gameHint">Pilih satu kartu.</p>
+    </section>
+  </main>
+
+  <section id="result" class="modal hidden"><div>
+    <span id="resultIcon">🏆</span><small>PERMAINAN SELESAI</small><h2 id="resultTitle">Pemenang!</h2><p id="resultText"></p>
+    <div id="finalScores" class="finalScores"></div><a class="primary button" href="/games/memory-match-online/index.html">MAIN LAGI</a><a class="secondary button" href="/">KEMBALI KE SKYVERSE</a>
+  </div></section>
+  <div id="toast"></div>
+  <script src="game.js?v=1"></script>
+</body>
+</html>
