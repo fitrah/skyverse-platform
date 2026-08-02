@@ -1,7 +1,7 @@
 const q=s=>document.querySelector(s),api='/api/games/memory-match/rooms/';
 const el={lobby:q('#lobby'),waiting:q('#waiting'),arena:q('#arena'),result:q('#result'),error:q('#lobbyError'),code:q('#roomCode'),copy:q('#copyCode'),players:q('#waitingPlayers'),start:q('#startGame'),message:q('#waitingMessage'),board:q('#board'),scores:q('#scoreboard'),turn:q('#turnText'),hint:q('#gameHint')};
 let code=new URLSearchParams(location.search).get('room')?.toUpperCase()||'',state=null,pollTimer=0,busy=false,resultShown=false;
-function show(name){['lobby','waiting','arena'].forEach(x=>el[x].classList.toggle('hidden',x!==name))}
+function show(name){['lobby','waiting','arena'].forEach(x=>el[x].classList.toggle('hidden',x!==name));document.body.classList.toggle('game-mode',name==='arena')}
 function toast(text){const t=q('#toast');t.textContent=text;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
 async function request(url,options){const r=await fetch(url,options),data=await r.json().catch(()=>({}));if(r.status===401){location.href='/login?next='+encodeURIComponent(location.pathname+location.search);throw new Error('Silakan login dahulu.')}if(!r.ok)throw new Error(data.error||'Terjadi gangguan koneksi.');return data}
 function setRoom(newCode){code=newCode;history.replaceState({},'',location.pathname+'?room='+code);el.copy.textContent=code;q('#arenaCode').textContent=code;poll()}

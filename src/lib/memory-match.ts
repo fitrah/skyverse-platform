@@ -2,7 +2,7 @@ import "server-only";
 import { randomBytes, randomUUID } from "node:crypto";
 import { getPool } from "@/lib/db";
 
-export const MEMORY_SYMBOLS = ["🐶","🐱","🐰","🦊","🐼","🐨","🐯","🦁","🐸","🐵","⭐","🌙","☀️","🌈","🚀","🎈","🎸","⚽","🍉","🍦"];
+export const MEMORY_SYMBOLS = ["🐶","🐱","🐰","🦊","🐼","🐨","🐯","🦁","🐸","🐵","⭐","🌙","☀️","🌈","🚀"];
 
 export function roomCode() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

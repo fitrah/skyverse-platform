@@ -6,7 +6,7 @@ type Params={params:Promise<{code:string}>};
 export async function POST(request:Request,{params}:Params){
   const user=await getCurrentUser();if(!user)return NextResponse.json({error:"Harus login."},{status:401});
   const position=Number((await request.json().catch(()=>({}))).position);
-  if(!Number.isInteger(position)||position<0||position>39)return NextResponse.json({error:"Kartu tidak valid."},{status:400});
+  if(!Number.isInteger(position)||position<0||position>29)return NextResponse.json({error:"Kartu tidak valid."},{status:400});
   const code=(await params).code.toUpperCase(),client=await getPool().connect();
   try{
     await client.query("BEGIN");
