@@ -10,6 +10,7 @@ export async function POST(request:Request,{params}:Params){
   const code=(await params).code.toUpperCase(),client=await getPool().connect();
   try{
     await client.query("BEGIN");
+    await client.query("UPDATE memory_room_players p SET last_seen=now() FROM memory_rooms r WHERE r.id=p.room_id AND r.code=$1 AND p.user_id=$2",[code,user.id]);
     const room=await client.query<{id:string;status:string;current_turn_user_id:string;pending_first:number|null;pending_second:number|null}>("SELECT id::text,status,current_turn_user_id::text,pending_first,pending_second FROM memory_rooms WHERE code=$1 FOR UPDATE",[code]);
     const state=room.rows[0];if(!state)throw Object.assign(new Error("Room tidak ditemukan."),{status:404});
     if(state.status!=="playing")throw Object.assign(new Error("Permainan belum aktif."),{status:409});
@@ -18,7 +19,7 @@ export async function POST(request:Request,{params}:Params){
     if(state.pending_first===position)throw Object.assign(new Error("Pilih kartu yang berbeda."),{status:409});
     const picked=await client.query<{symbol:string;matched_by:string|null}>("SELECT symbol,matched_by::text FROM memory_room_cards WHERE room_id=$1 AND position=$2",[state.id,position]);
     if(!picked.rows[0]||picked.rows[0].matched_by)throw Object.assign(new Error("Kartu itu sudah ditemukan."),{status:409});
-    if(state.pending_first===null){await client.query("UPDATE memory_rooms SET pending_first=$2,updated_at=now() WHERE id=$1",[state.id,position]);}
+    if(state.pending_first===null){await client.query("UPDATE memory_rooms SET pending_first=$2,turn_started_at=now(),updated_at=now() WHERE id=$1",[state.id,position]);}
     else{
       const first=await client.query<{symbol:string}>("SELECT symbol FROM memory_room_cards WHERE room_id=$1 AND position=$2",[state.id,state.pending_first]);
       if(first.rows[0].symbol===picked.rows[0].symbol){
@@ -29,7 +30,7 @@ export async function POST(request:Request,{params}:Params){
           const winners=await client.query<{user_id:string;score:number}>("SELECT user_id::text,score FROM memory_room_players WHERE room_id=$1 ORDER BY score DESC,seat LIMIT 2",[state.id]);
           const winner=winners.rows.length===1||winners.rows[0].score>winners.rows[1].score?winners.rows[0].user_id:null;
           await client.query("UPDATE memory_rooms SET status='finished',winner_user_id=$2,pending_first=NULL,pending_second=NULL,updated_at=now() WHERE id=$1",[state.id,winner]);
-        }else await client.query("UPDATE memory_rooms SET pending_first=NULL,pending_second=NULL,updated_at=now() WHERE id=$1",[state.id]);
+        }else await client.query("UPDATE memory_rooms SET pending_first=NULL,pending_second=NULL,turn_started_at=now(),updated_at=now() WHERE id=$1",[state.id]);
       }else await client.query("UPDATE memory_rooms SET pending_second=$2,resolve_at=now()+interval '1400 milliseconds',updated_at=now() WHERE id=$1",[state.id,position]);
     }
     await client.query("COMMIT");return NextResponse.json({ok:true});
