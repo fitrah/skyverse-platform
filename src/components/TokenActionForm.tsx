@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import PasswordInput from "@/components/PasswordInput";
 
 export function VerifyEmailForm({ token }: { token: string }) {
   const [message,setMessage]=useState("Memverifikasi email...");
@@ -12,4 +14,4 @@ export function ForgotPasswordForm(){const [message,setMessage]=useState("");asy
 
 export function ResendVerificationForm(){const [message,setMessage]=useState("");async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget);await fetch("/api/auth/resend-verification",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:data.get("email")})});setMessage("Jika akun belum aktif, email verifikasi sudah dikirim ulang.")}return <form onSubmit={submit}><h1>Kirim Ulang Verifikasi</h1><label>Email<input name="email" type="email" required autoComplete="email"/></label><button>KIRIM ULANG</button>{message&&<p>{message}</p>}<p><Link href="/login">Kembali masuk</Link></p></form>}
 
-export function ResetPasswordForm({token}:{token:string}){const [message,setMessage]=useState("");async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget),password=String(data.get("password")??""),response=await fetch("/api/auth/reset-password",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,password})}),body=await response.json();setMessage(response.ok?"Password berhasil diganti. Silakan masuk kembali.":body.error)}return <form onSubmit={submit}><h1>Password Baru</h1><label>Password<input name="password" type="password" minLength={8} required autoComplete="new-password"/></label><button>SIMPAN PASSWORD</button>{message&&<p>{message}</p>}<p><Link href="/login">Ke halaman masuk</Link></p></form>}
+export function ResetPasswordForm({token}:{token:string}){const router=useRouter(),[message,setMessage]=useState("");async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget),password=String(data.get("password")??""),response=await fetch("/api/auth/reset-password",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token,password})}),body=await response.json();if(response.ok){router.replace("/login?passwordChanged=1");return}setMessage(body.error)}return <form onSubmit={submit}><h1>Password Baru</h1><label>Password<PasswordInput name="password" minLength={8} required autoComplete="new-password"/></label><button>SIMPAN PASSWORD</button>{message&&<p>{message}</p>}<p><Link href="/login">Ke halaman masuk</Link></p></form>}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./auth-extra.css";
+import "./password-controls.css";
 import "./home-auth.css";
 import "./profile-progress.css";
 
