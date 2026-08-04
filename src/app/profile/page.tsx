@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { query } from "@/lib/db";
+import ChangePasswordForm from "@/components/ChangePasswordForm";
 
 type GameProgress = {
   title: string;
@@ -100,7 +101,8 @@ export default async function Profile() {
             ))}
           </div>
         )}
-        <form action="/api/auth/logout" method="post"><button>LOGOUT</button></form>
+        <ChangePasswordForm />
+        <form className="logoutForm" action="/api/auth/logout" method="post"><button>LOGOUT</button></form>
       </section>
     </main>
   );

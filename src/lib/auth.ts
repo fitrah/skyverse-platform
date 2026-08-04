@@ -29,6 +29,11 @@ export async function deleteSession() {
   if(token) await query("DELETE FROM sessions WHERE token_hash=$1",[tokenHash(token)]);
   store.delete(SESSION_COOKIE);
 }
+export async function deleteOtherSessions(userId: string) {
+  const token = (await cookies()).get(SESSION_COOKIE)?.value;
+  if (!token) return;
+  await query("DELETE FROM sessions WHERE user_id=$1 AND token_hash<>$2", [userId, tokenHash(token)]);
+}
 export type SessionUser={id:string;username:string;email:string;avatar_id:string;coins:number};
 export async function getCurrentUser(){
   const token=(await cookies()).get(SESSION_COOKIE)?.value;if(!token)return null;
