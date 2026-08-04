@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { GameConfig } from "@/lib/game-builder";
+import { trackEvent } from "@/lib/analytics";
 
 type Entity = {
   x: number;
@@ -83,6 +84,7 @@ export default function GeneratedGame({
       setScore(collected);
       setResult(won ? "won" : "lost");
       setStarted(false);
+      trackEvent("game_complete",{game_slug:slug,result:won?"won":"lost",score:collected});
     };
     const hit = () => {
       hp--;
@@ -260,6 +262,7 @@ export default function GeneratedGame({
   }, [started, config, slug, trackProgress]);
 
   const start = () => {
+    trackEvent("game_start",{game_slug:slug,template:config.template});
     touchInput.current = { x: 0, y: 0, action: false };
     actionQueued.current = false;
     setScore(0);

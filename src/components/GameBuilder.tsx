@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
+import { trackEvent } from "@/lib/analytics";
 
 type Project = {
   id: string;
@@ -61,6 +62,7 @@ export default function GameBuilder() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
       setPrompt("");
+      trackEvent("game_create",{template:data.project.template});
       await loadProjects();
       setSelected({ ...data.project, prompt, config: data.project });
     } catch (cause) {
@@ -95,6 +97,7 @@ export default function GameBuilder() {
       const response = await fetch(`/api/builder/projects/${selected.id}/publish`, { method: "POST" });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
+      trackEvent("game_publish",{template:selected.template});
       await loadProjects();
       setSelected({ ...selected, status: "published" });
     } catch (cause) {
