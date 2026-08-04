@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     const row = found.rows[0];
     if (!row) { await client.query("ROLLBACK"); return NextResponse.json({ error: "Tautan tidak valid atau sudah kedaluwarsa." }, { status: 400 }); }
     await client.query("UPDATE users SET password_hash=$1,updated_at=now() WHERE id=$2", [await hashPassword(password), row.user_id]);
-    await client.query("UPDATE auth_tokens SET used_at=now() WHERE id=$1", [row.id]);
+    await client.query("UPDATE auth_tokens SET used_at=now() WHERE user_id=$1 AND purpose='reset_password' AND used_at IS NULL", [row.user_id]);
     await client.query("DELETE FROM sessions WHERE user_id=$1", [row.user_id]);
     await client.query("COMMIT");
     return NextResponse.json({ ok: true });
