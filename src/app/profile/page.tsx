@@ -21,6 +21,7 @@ type PlayHistory = {
   won: boolean;
   time_ms: number;
   played_at: Date;
+  details: { kills?: number; wave?: number; bossDamage?: number };
 };
 
 export default async function Profile() {
@@ -34,7 +35,7 @@ export default async function Profile() {
     [user.id],
   );
   const historyResult = await query<PlayHistory>(
-    `SELECT g.title,g.slug,h.score,h.won,h.time_ms,h.played_at
+    `SELECT g.title,g.slug,h.score,h.won,h.time_ms,h.played_at,h.details
      FROM game_play_history h JOIN games g ON g.id=h.game_id
      WHERE h.user_id=$1 ORDER BY h.played_at DESC LIMIT 12`,
     [user.id],
@@ -74,7 +75,9 @@ export default async function Profile() {
                     ? `Skor terbaik ${item.checkpoint}`
                     : item.slug === "crystal-arena"
                       ? `${item.checkpoint} kristal`
-                      : `Checkpoint ${item.checkpoint}/5`}
+                      : item.slug === "drone-rush"
+                        ? `Skor terbaik ${item.checkpoint}`
+                        : `Checkpoint ${item.checkpoint}/5`}
                 </b>
                 <small>
                   {item.wins} kemenangan
@@ -95,7 +98,12 @@ export default async function Profile() {
                 </span>
                 <span>
                   <b>{item.score} poin</b>
-                  <small className={item.won ? "won" : "lost"}>{item.won ? "MENANG" : "SELESAI"}</small>
+                  <small className={item.won ? "won" : "lost"}>
+                    {item.slug === "drone-rush" && item.details
+                      ? `${item.details.kills ?? 0} drone · wave ${item.details.wave ?? 0} · `
+                      : ""}
+                    {item.won ? "MENANG" : "SELESAI"}
+                  </small>
                 </span>
               </Link>
             ))}
