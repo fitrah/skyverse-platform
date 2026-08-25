@@ -3,69 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
-  <title>Abigel: Apartemen Yang Terkunci - Skyverse</title>
-  <link rel="stylesheet" href="style.css?v=1" />
+  <title>Abigel 3D: Apartemen Yang Terkunci - Skyverse</title>
+  <link rel="stylesheet" href="style.css?v=3d1" />
 </head>
 <body>
-  <main id="shell">
-    <header>
-      <a href="/">SKY<span>VERSE</span></a>
-      <div>
-        <h1>ABIGEL</h1>
-        <p>Apartemen Yang Terkunci</p>
-      </div>
-      <div class="hud">
-        <strong id="photoHud">Foto 0/4</strong>
-        <b id="ghostHud">Hantu 1</b>
-        <i id="timerHud">--:--</i>
-      </div>
-    </header>
+  <canvas id="game" aria-label="Game horror 3D Abigel"></canvas>
 
-    <section class="stage">
-      <canvas id="game" width="960" height="620" aria-label="Game horror Abigel"></canvas>
-      <aside>
-        <div class="panel">
-          <small>CATATAN ABIGEL</small>
-          <p id="note">Cari 4 foto Nori, Lila, Reno, dan Toni. Setelah lengkap, keluar secepatnya.</p>
-        </div>
-        <div class="panel list">
-          <small>FOTO TEMAN</small>
-          <ul id="photos"></ul>
-        </div>
-        <div class="panel">
-          <small>BARANG</small>
-          <p id="items">Belum ada.</p>
-        </div>
-        <button id="interact" class="wide">PERIKSA</button>
-      </aside>
-    </section>
+  <header id="hud" class="hidden">
+    <a href="/">SKY<span>VERSE</span></a>
+    <div class="meters">
+      <b id="photoHud">Foto 0/4</b>
+      <b id="ghostHud">Hantu 1</b>
+      <b id="fearHud">Takut 100%</b>
+      <b id="timerHud">--:--</b>
+    </div>
+  </header>
 
-    <section class="mobileControls" aria-label="Kontrol sentuh">
-      <div class="pad">
-        <button data-move="up">UP</button>
-        <button data-move="left">LEFT</button>
-        <button data-move="down">DOWN</button>
-        <button data-move="right">RIGHT</button>
-      </div>
-      <button id="touchInteract">PERIKSA</button>
-    </section>
-  </main>
+  <aside id="journal" class="hidden">
+    <small>CATATAN ABIGEL</small>
+    <p id="note">Cari 4 foto Nori, Lila, Reno, dan Toni. Setelah lengkap, keluar secepatnya.</p>
+    <ul id="photos"></ul>
+    <p class="items"><span>Barang:</span> <b id="items">Belum ada</b></p>
+    <button id="interact">PERIKSA</button>
+  </aside>
+
+  <div id="toast"></div>
+  <div id="crosshair" class="hidden">+</div>
 
   <section id="overlay" class="overlay">
     <div>
-      <small>SKYVERSE HORROR</small>
-      <h2>Abigel kembali ke apartemen lama teman-temannya.</h2>
-      <p>Nori, Lila, Reno, dan Toni menghilang. Empat foto mereka masih tertinggal di kamar, laci, lemari, dan ruangan terkunci. Setiap kunci atau kode yang dipakai membuat apartemen semakin ramai.</p>
+      <small>SKYVERSE HORROR 3D</small>
+      <h1>Abigel kembali ke apartemen lama teman-temannya.</h1>
+      <p>Temukan 4 foto Nori, Lila, Reno, dan Toni di apartemen yang sudah kosong. Beberapa ruangan terkunci, dan setiap kunci atau kode yang dipakai akan membangunkan hantu baru.</p>
       <ul>
-        <li>Gerak: WASD / tombol arah</li>
-        <li>Periksa: E / tombol PERIKSA</li>
-        <li>Jika 4 foto lengkap, lari ke pintu keluar</li>
+        <li>WASD / tombol arah untuk bergerak</li>
+        <li>Mouse / geser kanan layar untuk memutar kamera</li>
+        <li>E / PERIKSA untuk mengambil foto, kunci, atau membuka pintu</li>
       </ul>
-      <button id="start">MASUK APARTEMEN</button>
+      <button id="start">MASUK APARTEMEN 3D</button>
     </div>
   </section>
 
-  <div id="toast"></div>
-  <script src="game.js?v=1"></script>
+  <div id="touchControls" class="touch-controls hidden">
+    <div id="moveStick" class="move-stick"><i id="moveKnob"></i></div>
+    <div id="lookZone" class="look-zone"><span>GESER KAMERA</span></div>
+    <button id="touchInteract">PERIKSA</button>
+  </div>
+
+  <script src="../skybound-obby/three.min.js"></script>
+  <script src="game.js?v=3d1"></script>
 </body>
 </html>
