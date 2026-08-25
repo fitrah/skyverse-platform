@@ -69,7 +69,7 @@ function canStand(x, z) {
 }
 
 function makeTexturedFloor(room) {
-  const floor = box(room.w, 0.08, room.d, room.locked ? 0x221516 : 0x1b1c1b);
+  const floor = box(room.w, 0.08, room.d, room.locked ? 0x2b2022 : 0x34302a);
   floor.position.set(room.x, 0, room.z);
   scene.add(floor);
   roomFloors.set(room.id, floor);
@@ -80,7 +80,7 @@ function makeTexturedFloor(room) {
 }
 
 function wall(x, z, w, d, h = 2.9) {
-  const mesh = box(w, h, d, 0x2f302c);
+  const mesh = box(w, h, d, 0x555147);
   mesh.position.set(x, h / 2, z);
   scene.add(mesh);
 }
@@ -131,7 +131,7 @@ function furniture() {
     scene.add(mesh);
     objectMeshes.set(obj.id, mesh);
 
-    const glow = new THREE.PointLight(obj.photo ? 0xc69053 : 0x7de0a8, 0.85, 3.2);
+    const glow = new THREE.PointLight(obj.photo ? 0xf1b766 : 0x96f1b8, 1.35, 5.2);
     glow.position.set(obj.x, 1.3, obj.z);
     scene.add(glow);
     obj.glow = glow;
@@ -165,7 +165,7 @@ function makeHero() {
   const armR = armL.clone();
   armR.position.x = 0.52;
   group.add(armL, armR);
-  const lamp = new THREE.SpotLight(0xffdd9a, 5.5, 12, Math.PI / 6, 0.5, 1.2);
+  const lamp = new THREE.SpotLight(0xffe3a8, 10.5, 22, Math.PI / 4.5, 0.55, 1);
   lamp.position.set(0, 1.55, -0.3);
   lamp.target.position.set(0, 1.15, -5);
   group.add(lamp, lamp.target);
@@ -198,17 +198,22 @@ function makeGhost(x, z, speed = 1.55) {
 
 function init3d() {
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x050606);
-  scene.fog = new THREE.Fog(0x050606, 9, 35);
+  scene.background = new THREE.Color(0x0f1214);
+  scene.fog = new THREE.Fog(0x121010, 17, 58);
   camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.1, 80);
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.shadowMap.enabled = true;
-  scene.add(new THREE.HemisphereLight(0x57483e, 0x050606, 0.9));
-  const moon = new THREE.DirectionalLight(0x9aa5b8, 1.1);
+  scene.add(new THREE.HemisphereLight(0xc9b991, 0x202226, 1.65));
+  const moon = new THREE.DirectionalLight(0xcfd7ff, 1.75);
   moon.position.set(-8, 12, 7);
   scene.add(moon);
+  [[-3, -1], [8, -3], [0, 4], [-12, 0]].forEach(([x, z]) => {
+    const lamp = new THREE.PointLight(0xffd49a, 1.55, 12);
+    lamp.position.set(x, 2.7, z);
+    scene.add(lamp);
+  });
   rooms.forEach(buildRoom);
   rooms.forEach(addDoor);
   furniture();
@@ -250,7 +255,7 @@ function resetWorldState() {
     if (room.id === "archive") room.locked = "code";
     if (room.doorMesh) room.doorMesh.visible = !!room.locked;
     const floor = roomFloors.get(room.id);
-    if (floor) floor.material.color.set(room.locked ? 0x221516 : 0x1b1c1b);
+    if (floor) floor.material.color.set(room.locked ? 0x2b2022 : 0x34302a);
   });
   objectMeshes.forEach((mesh) => {
     mesh.visible = true;
@@ -287,7 +292,7 @@ function unlock(room) {
     }
     room.locked = null;
     room.doorMesh.visible = false;
-    roomFloors.get(room.id)?.material.color.set(0x1b1c1b);
+    roomFloors.get(room.id)?.material.color.set(0x34302a);
     noteEl.textContent = "Kunci gudang berputar, lalu patah. Hantu baru terbangun.";
     makeGhost(-5, 6, 1.65);
     toast("Gudang terbuka. Hantu bertambah.");
@@ -302,7 +307,7 @@ function unlock(room) {
     }
     room.locked = null;
     room.doorMesh.visible = false;
-    roomFloors.get(room.id)?.material.color.set(0x1b1c1b);
+    roomFloors.get(room.id)?.material.color.set(0x34302a);
     noteEl.textContent = "Kode benar. Ruang arsip terbuka, tapi bayangan lain ikut masuk.";
     makeGhost(7, 6, 1.78);
     toast("Ruang arsip terbuka. Hantu bertambah.");
