@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <title>Abigel: Apartemen Yang Terkunci - Skyverse</title>
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <main id="shell">
+    <header>
+      <a href="/">SKY<span>VERSE</span></a>
+      <div>
+        <h1>ABIGEL</h1>
+        <p>Apartemen Yang Terkunci</p>
+      </div>
+      <div class="hud">
+        <strong id="photoHud">Foto 0/4</strong>
+        <b id="ghostHud">Hantu 1</b>
+        <i id="timerHud">--:--</i>
+      </div>
+    </header>
+
+    <section class="stage">
+      <canvas id="game" width="960" height="620" aria-label="Game horror Abigel"></canvas>
+      <aside>
+        <div class="panel">
+          <small>CATATAN ABIGEL</small>
+          <p id="note">Cari 4 foto Nori, Lila, Reno, dan Toni. Setelah lengkap, keluar secepatnya.</p>
+        </div>
+        <div class="panel list">
+          <small>FOTO TEMAN</small>
+          <ul id="photos"></ul>
+        </div>
+        <div class="panel">
+          <small>BARANG</small>
+          <p id="items">Belum ada.</p>
+        </div>
+        <button id="interact" class="wide">PERIKSA</button>
+      </aside>
+    </section>
+
+    <section class="mobileControls" aria-label="Kontrol sentuh">
+      <div class="pad">
+        <button data-move="up">UP</button>
+        <button data-move="left">LEFT</button>
+        <button data-move="down">DOWN</button>
+        <button data-move="right">RIGHT</button>
+      </div>
+      <button id="touchInteract">PERIKSA</button>
+    </section>
+  </main>
+
+  <section id="overlay" class="overlay">
+    <div>
+      <small>SKYVERSE HORROR</small>
+      <h2>Abigel kembali ke apartemen lama teman-temannya.</h2>
+      <p>Nori, Lila, Reno, dan Toni menghilang. Empat foto mereka masih tertinggal di kamar, laci, lemari, dan ruangan terkunci. Setiap kunci atau kode yang dipakai membuat apartemen semakin ramai.</p>
+      <ul>
+        <li>Gerak: WASD / tombol arah</li>
+        <li>Periksa: E / tombol PERIKSA</li>
+        <li>Jika 4 foto lengkap, lari ke pintu keluar</li>
+      </ul>
+      <button id="start">MASUK APARTEMEN</button>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+  <script src="game.js?v=1"></script>
+</body>
+</html>
