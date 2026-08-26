@@ -21,7 +21,7 @@ type PlayHistory = {
   won: boolean;
   time_ms: number;
   played_at: Date;
-  details: { kills?: number; wave?: number; bossDamage?: number };
+  details: { kills?: number; wave?: number; bossDamage?: number; photos?: number; ghosts?: number; fear?: number };
 };
 
 export default async function Profile() {
@@ -77,7 +77,9 @@ export default async function Profile() {
                       ? `${item.checkpoint} kristal`
                       : item.slug === "drone-rush"
                         ? `Skor terbaik ${item.checkpoint}`
-                        : `Checkpoint ${item.checkpoint}/5`}
+                        : item.slug === "abigel-apartment"
+                          ? `${item.checkpoint}/4 foto`
+                          : `Checkpoint ${item.checkpoint}/5`}
                 </b>
                 <small>
                   {item.wins} kemenangan
@@ -101,6 +103,9 @@ export default async function Profile() {
                   <small className={item.won ? "won" : "lost"}>
                     {item.slug === "drone-rush" && item.details
                       ? `${item.details.kills ?? 0} drone · wave ${item.details.wave ?? 0} · `
+                      : ""}
+                    {item.slug === "abigel-apartment" && item.details
+                      ? `${item.details.photos ?? 0}/4 foto · ${item.details.ghosts ?? 1} hantu · `
                       : ""}
                     {item.won ? "MENANG" : "SELESAI"}
                   </small>

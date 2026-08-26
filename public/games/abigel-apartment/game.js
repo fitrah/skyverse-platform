@@ -44,6 +44,7 @@ const player = { pos: new THREE.Vector3(-14, 0.75, 0), vel: new THREE.Vector3(),
 const ghosts = [];
 let scene, camera, renderer, clock, hero, yaw = 0, pitch = 0.45, running = false, won = false, dead = false;
 let escapeStarted = false, escapeEnd = 0, pulse = 0, lastRoomId = "";
+let startedAt = 0;
 
 function mat(color, opts = {}) {
   return new THREE.MeshStandardMaterial({ color, roughness: 0.74, metalness: 0.03, ...opts });
@@ -269,6 +270,7 @@ function resetWorldState() {
   player.pos.set(-14, 0.75, 0);
   player.vel.set(0, 0, 0);
   player.fear = 100;
+  startedAt = performance.now();
   yaw = -Math.PI / 2;
   pitch = 0.46;
   hero.position.copy(player.pos);
@@ -364,6 +366,7 @@ function finish(success) {
   running = false;
   won = success;
   dead = !success;
+  saveProgress(success);
   document.exitPointerLock?.();
   hud.classList.add("hidden");
   journal.classList.add("hidden");
@@ -376,6 +379,20 @@ function finish(success) {
     : "Coba lagi. Cari kunci, ingat kode 2714, dan kabur segera setelah foto lengkap.";
   overlay.querySelector("button").textContent = "MAIN LAGI";
   overlay.classList.remove("hidden");
+}
+
+function saveProgress(success) {
+  fetch("/api/games/abigel-apartment/progress", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      photos: found.size,
+      ghosts: ghosts.length,
+      fear: Math.round(player.fear),
+      timeMs: Math.round(performance.now() - startedAt),
+      won: success,
+    }),
+  }).catch(() => {});
 }
 
 function start() {
