@@ -536,10 +536,11 @@ function setupTouch() {
   let ly = 0;
   const move = (event) => {
     if (event.pointerId !== moveId) return;
+    event.preventDefault();
     const rect = stick.getBoundingClientRect();
     const dx = event.clientX - (rect.left + rect.width / 2);
     const dy = event.clientY - (rect.top + rect.height / 2);
-    const max = 38;
+    const max = 34;
     const len = Math.hypot(dx, dy) || 1;
     const k = Math.min(1, max / len);
     const nx = dx * k;
@@ -549,6 +550,7 @@ function setupTouch() {
     touchMove.z = ny / max;
   };
   stick.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
     moveId = event.pointerId;
     stick.setPointerCapture(moveId);
     move(event);
@@ -564,6 +566,7 @@ function setupTouch() {
   stick.addEventListener("pointerup", stopMove);
   stick.addEventListener("pointercancel", stopMove);
   look.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
     lookId = event.pointerId;
     lx = event.clientX;
     ly = event.clientY;
@@ -571,6 +574,7 @@ function setupTouch() {
   });
   look.addEventListener("pointermove", (event) => {
     if (event.pointerId !== lookId) return;
+    event.preventDefault();
     yaw -= (event.clientX - lx) * 0.006;
     pitch = THREE.MathUtils.clamp(pitch - (event.clientY - ly) * 0.005, 0.18, 0.88);
     lx = event.clientX;
