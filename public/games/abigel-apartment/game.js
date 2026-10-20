@@ -13,6 +13,7 @@ const itemsEl = $("#items");
 const toastEl = $("#toast");
 const crosshair = $("#crosshair");
 const cameraModeEl = $("#cameraMode");
+const touchCameraModeEl = $("#touchCameraMode");
 
 const WORLD_SCALE = 1.35;
 
@@ -295,6 +296,7 @@ function resetWorldState() {
   pitch = 0.46;
   cameraMode = "third";
   cameraModeEl.textContent = "KAMERA: 3P";
+  touchCameraModeEl.textContent = "KAMERA: 3P";
   hero.visible = true;
   hero.position.copy(player.pos);
   running = true;
@@ -514,6 +516,7 @@ function setCameraMode(mode) {
   cameraMode = mode;
   const labels = { third: "KAMERA: 3P", first: "KAMERA: POV", top: "KAMERA: ATAS" };
   cameraModeEl.textContent = labels[mode];
+  touchCameraModeEl.textContent = labels[mode];
   if (mode === "first") toast("Mode POV karakter");
   if (mode === "top") toast("Mode kamera dari atas");
   if (mode === "third") toast("Mode kamera 3P");
@@ -584,6 +587,7 @@ function setupInput() {
   $("#interact").addEventListener("click", interact);
   $("#touchInteract").addEventListener("click", interact);
   cameraModeEl.addEventListener("click", cycleCameraMode);
+  touchCameraModeEl.addEventListener("click", cycleCameraMode);
   $("#start").addEventListener("click", start);
   addEventListener("resize", () => {
     camera.aspect = innerWidth / innerHeight;
