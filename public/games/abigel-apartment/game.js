@@ -12,6 +12,9 @@ const photosEl = $("#photos");
 const itemsEl = $("#items");
 const toastEl = $("#toast");
 const crosshair = $("#crosshair");
+const cameraModeEl = $("#cameraMode");
+
+const WORLD_SCALE = 1.35;
 
 const rooms = [
   { id: "foyer", name: "Foyer", x: -14, z: 0, w: 8, d: 7 },
@@ -32,6 +35,17 @@ const objects = [
   { id: "memo", room: "hall", label: "memo robek", x: 1.2, z: -1.4, hint: true, text: "Memo robek: 'Ruang arsip terbuka dengan angka yang tersisa dari foto lama. Jika panik, ingat 2714.'" },
 ];
 
+rooms.forEach((room) => {
+  room.x *= WORLD_SCALE;
+  room.z *= WORLD_SCALE;
+  room.w *= WORLD_SCALE;
+  room.d *= WORLD_SCALE;
+});
+objects.forEach((object) => {
+  object.x *= WORLD_SCALE;
+  object.z *= WORLD_SCALE;
+});
+
 const names = ["Nori", "Lila", "Reno", "Toni"];
 const found = new Set();
 const opened = new Set();
@@ -43,6 +57,7 @@ const touchMove = { x: 0, z: 0 };
 const player = { pos: new THREE.Vector3(-14, 0.75, 0), vel: new THREE.Vector3(), speed: 5.3, fear: 100 };
 const ghosts = [];
 let scene, camera, renderer, clock, hero, yaw = 0, pitch = 0.45, running = false, won = false, dead = false;
+let cameraMode = "third";
 let escapeStarted = false, escapeEnd = 0, pulse = 0, lastRoomId = "";
 let startedAt = 0;
 
@@ -197,6 +212,10 @@ function makeGhost(x, z, speed = 1.55) {
   return ghost;
 }
 
+function spawnGhost(x, z, speed) {
+  return makeGhost(x * WORLD_SCALE, z * WORLD_SCALE, speed);
+}
+
 function init3d() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0f1214);
@@ -266,13 +285,17 @@ function resetWorldState() {
     if (obj.glow) obj.glow.visible = true;
   });
   ghosts.splice(0).forEach((ghost) => scene.remove(ghost.group));
-  makeGhost(13, 1, 1.5);
-  player.pos.set(-14, 0.75, 0);
+  spawnGhost(13, 1, 1.5);
+  const foyer = rooms.find((room) => room.id === "foyer");
+  player.pos.set(foyer.x, 0.75, foyer.z);
   player.vel.set(0, 0, 0);
   player.fear = 100;
   startedAt = performance.now();
   yaw = -Math.PI / 2;
   pitch = 0.46;
+  cameraMode = "third";
+  cameraModeEl.textContent = "KAMERA: 3P";
+  hero.visible = true;
   hero.position.copy(player.pos);
   running = true;
   won = false;
@@ -296,7 +319,7 @@ function unlock(room) {
     room.doorMesh.visible = false;
     roomFloors.get(room.id)?.material.color.set(0x34302a);
     noteEl.textContent = "Kunci gudang berputar, lalu patah. Hantu baru terbangun.";
-    makeGhost(-5, 6, 1.65);
+    spawnGhost(-5, 6, 1.65);
     toast("Gudang terbuka. Hantu bertambah.");
     return;
   }
@@ -311,7 +334,7 @@ function unlock(room) {
     room.doorMesh.visible = false;
     roomFloors.get(room.id)?.material.color.set(0x34302a);
     noteEl.textContent = "Kode benar. Ruang arsip terbuka, tapi bayangan lain ikut masuk.";
-    makeGhost(7, 6, 1.78);
+    spawnGhost(7, 6, 1.78);
     toast("Ruang arsip terbuka. Hantu bertambah.");
   }
 }
@@ -345,7 +368,7 @@ function interact() {
   }
 
   const room = currentRoom();
-  if (room?.id === "foyer" && player.pos.x < -16.8) {
+  if (room?.id === "foyer" && player.pos.x < room.x - room.w / 2 + 1.2) {
     if (escapeStarted) return finish(true);
     noteEl.textContent = "Abigel belum bisa pergi. Foto teman-temannya belum lengkap.";
     toast("Cari semua foto dulu.");
@@ -358,7 +381,7 @@ function startEscape() {
   escapeStarted = true;
   escapeEnd = performance.now() + 75000;
   noteEl.textContent = "Empat foto lengkap. Apartemen mulai mengunci. Cepat keluar lewat foyer!";
-  makeGhost(-14, 0, 1.9);
+  spawnGhost(-14, 0, 1.9);
   toast("Semua foto ketemu. Lari ke pintu keluar!");
 }
 
@@ -454,10 +477,51 @@ function updateGhosts(dt, time) {
 
 function updateCamera(dt) {
   const focus = player.pos.clone().add(new THREE.Vector3(0, 1.2, 0));
-  const distance = 7.6;
-  const want = focus.clone().add(new THREE.Vector3(Math.sin(yaw) * Math.cos(pitch) * distance, Math.sin(pitch) * distance + 1.5, Math.cos(yaw) * Math.cos(pitch) * distance));
+  let want;
+
+  if (cameraMode === "first") {
+    hero.visible = false;
+    want = player.pos.clone().add(new THREE.Vector3(0, 1.55, 0));
+    camera.position.lerp(want, 1 - Math.exp(-14 * dt));
+    const lookDirection = new THREE.Vector3(
+      -Math.sin(yaw) * Math.cos(pitch),
+      Math.sin(pitch),
+      -Math.cos(yaw) * Math.cos(pitch),
+    );
+    camera.lookAt(want.clone().add(lookDirection.multiplyScalar(8)));
+    return;
+  }
+
+  hero.visible = true;
+  if (cameraMode === "top") {
+    want = focus.clone().add(new THREE.Vector3(Math.sin(yaw) * 2.5, 18, Math.cos(yaw) * 2.5));
+    camera.position.lerp(want, 1 - Math.exp(-7 * dt));
+    camera.lookAt(focus);
+    return;
+  }
+
+  const distance = 10.2;
+  want = focus.clone().add(new THREE.Vector3(
+    Math.sin(yaw) * Math.cos(pitch) * distance,
+    Math.sin(pitch) * distance + 1.5,
+    Math.cos(yaw) * Math.cos(pitch) * distance,
+  ));
   camera.position.lerp(want, 1 - Math.exp(-8 * dt));
   camera.lookAt(focus);
+}
+
+function setCameraMode(mode) {
+  cameraMode = mode;
+  const labels = { third: "KAMERA: 3P", first: "KAMERA: POV", top: "KAMERA: ATAS" };
+  cameraModeEl.textContent = labels[mode];
+  if (mode === "first") toast("Mode POV karakter");
+  if (mode === "top") toast("Mode kamera dari atas");
+  if (mode === "third") toast("Mode kamera 3P");
+}
+
+function cycleCameraMode() {
+  const modes = ["third", "first", "top"];
+  setCameraMode(modes[(modes.indexOf(cameraMode) + 1) % modes.length]);
 }
 
 function updateRoomNote() {
@@ -503,6 +567,7 @@ function setupInput() {
   addEventListener("keydown", (event) => {
     keys[event.code] = true;
     if (event.code === "KeyE") interact();
+    if (event.code === "KeyC") cycleCameraMode();
     if (event.code.startsWith("Arrow")) event.preventDefault();
   });
   addEventListener("keyup", (event) => {
@@ -518,6 +583,7 @@ function setupInput() {
   });
   $("#interact").addEventListener("click", interact);
   $("#touchInteract").addEventListener("click", interact);
+  cameraModeEl.addEventListener("click", cycleCameraMode);
   $("#start").addEventListener("click", start);
   addEventListener("resize", () => {
     camera.aspect = innerWidth / innerHeight;

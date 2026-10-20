@@ -8,6 +8,8 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;background:radi
 #hud a span{color:#b73a46}
 .meters{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .meters b{min-width:88px;text-align:center;border:1px solid rgba(239,233,216,.24);background:rgba(8,10,10,.58);border-radius:7px;padding:8px 10px;font-size:13px;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+#cameraMode{min-height:34px;border:1px solid rgba(214,187,114,.5);border-radius:7px;padding:7px 10px;background:rgba(183,58,70,.72);color:#fff;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+#cameraMode:active{transform:translateY(1px)}
 #journal{position:fixed;z-index:3;right:16px;top:78px;width:300px;max-width:calc(100vw - 32px);border:1px solid rgba(239,233,216,.18);background:rgba(12,13,13,.64);backdrop-filter:blur(10px);border-radius:8px;padding:14px;box-shadow:0 22px 70px rgba(0,0,0,.32)}
 #journal small{display:block;color:#d6bb72;font-size:11px;font-weight:900;letter-spacing:1.4px;margin-bottom:7px}
 #journal p{margin:0 0 11px;color:#f0e8d7;line-height:1.42;font-size:14px}
@@ -42,6 +44,7 @@ button{font:inherit;color:inherit}
   #hud a{font-size:18px;line-height:1}
   .meters{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
   .meters b{min-width:0;padding:7px 4px;font-size:11px;line-height:1.1;white-space:nowrap}
+  #cameraMode{grid-column:span 2;width:100%;min-height:31px;padding:6px 4px;font-size:10px}
   #journal{left:12px;right:12px;top:calc(86px + env(safe-area-inset-top));bottom:auto;width:auto;max-width:none;max-height:none;padding:9px 10px;background:rgba(10,11,11,.5);box-shadow:0 14px 38px rgba(0,0,0,.24)}
   #journal small{display:none}
   #journal p{margin:0 0 7px;font-size:12px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
